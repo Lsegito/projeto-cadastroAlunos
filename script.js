@@ -77,3 +77,35 @@ const excluirAluno = (i) => {
   atualizarTabela();
   alert("Aluno excluído!");
 };
+
+const saida = document.getElementById("saida-relatorio");
+
+const listarAprovados = () => {
+  const aprovados = alunos.filter(a => a.isAprovado());
+  saida.textContent = aprovados.map(a => a.toString()).join("\n") || "Nenhum aluno aprovado";
+};
+
+const mediaNotas = () => {
+  const media = alunos.reduce((acc, a) => acc + a.notaFinal, 0) / alunos.length || 0;
+  saida.textContent = `Média das notas: ${media.toFixed(2)}`;
+};
+
+const mediaIdades = () => {
+  const media = alunos.reduce((acc, a) => acc + parseInt(a.idade), 0) / alunos.length || 0;
+  saida.textContent = `Média das idades: ${media.toFixed(1)}`;
+};
+
+const nomesOrdemAlfabetica = () => {
+  const nomes = alunos.map(a => a.nome).sort();
+  saida.textContent = nomes.join("\n") || "Nenhum aluno cadastrado";
+};
+
+const quantidadePorCurso = () => {
+  const qtd = alunos.reduce((acc, a) => {
+    acc[a.curso] = (acc[a.curso] || 0) + 1;
+    return acc;
+  }, {});
+  saida.textContent = Object.entries(qtd)
+    .map(([curso, total]) => `${curso}: ${total}`)
+    .join("\n") || "Nenhum curso cadastrado";
+};
