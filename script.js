@@ -1,3 +1,20 @@
+class Aluno {
+  constructor(nome, idade, curso, notaFinal) {
+    this.nome = nome;
+    this.idade = idade;
+    this.curso = curso;
+    this.notaFinal = parseFloat(notaFinal);
+  }
+
+  isAprovado() {
+    return this.notaFinal >= 7;
+  }
+
+  toString() {
+    return `${this.nome} (${this.curso}) - Nota: ${this.notaFinal}`;
+  }
+}
+
 let alunos = [];
 let indiceEdicao = null;
 
@@ -12,7 +29,7 @@ function cadastrarAluno() {
     return;
   }
 
-  const aluno = { nome, idade, curso, notaFinal };
+  const aluno = new Aluno(nome, idade, curso, notaFinal);
 
   if (indiceEdicao !== null) {
     alunos[indiceEdicao] = aluno;
