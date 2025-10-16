@@ -5,20 +5,15 @@ class Aluno {
     this.curso = curso;
     this.notaFinal = parseFloat(notaFinal);
   }
-
-  isAprovado() {
-    return this.notaFinal >= 7;
-  }
-
-  toString() {
-    return `${this.nome} (${this.curso}) - Nota: ${this.notaFinal}`;
-  }
+  isAprovado = () => this.notaFinal >= 7;
+  toString = () => `${this.nome} (${this.curso}) - Nota: ${this.notaFinal}`;
 }
 
 let alunos = [];
 let indiceEdicao = null;
 
-function cadastrarAluno() {
+document.getElementById("form-aluno").addEventListener("submit", (e) => {
+  e.preventDefault();
   const nome = document.getElementById("nome").value;
   const idade = document.getElementById("idade").value;
   const curso = document.getElementById("curso").value;
@@ -30,46 +25,55 @@ function cadastrarAluno() {
   }
 
   const aluno = new Aluno(nome, idade, curso, notaFinal);
-
   if (indiceEdicao !== null) {
     alunos[indiceEdicao] = aluno;
     indiceEdicao = null;
+    alert("Aluno atualizado!");
   } else {
     alunos.push(aluno);
+    alert("Aluno cadastrado!");
   }
 
   atualizarTabela();
-  document.getElementById("form-aluno").reset();
-}
+  e.target.reset();
+});
 
-function atualizarTabela() {
+const atualizarTabela = () => {
   const corpo = document.getElementById("tabela-alunos");
   corpo.innerHTML = "";
   alunos.forEach((a, i) => {
-    const linha = `<tr>
+    const linha = document.createElement("tr");
+    linha.innerHTML = `
       <td>${a.nome}</td>
       <td>${a.idade}</td>
       <td>${a.curso}</td>
       <td>${a.notaFinal}</td>
       <td>
-        <button onclick="editarAluno(${i})">Editar</button>
-        <button onclick="excluirAluno(${i})">Excluir</button>
-      </td>
-    </tr>`;
-    corpo.innerHTML += linha;
+        <button class="editar" data-i="${i}">Editar</button>
+        <button class="excluir" data-i="${i}">Excluir</button>
+      </td>`;
+    corpo.appendChild(linha);
   });
-}
 
-function editarAluno(i) {
-  const aluno = alunos[i];
-  document.getElementById("nome").value = aluno.nome;
-  document.getElementById("idade").value = aluno.idade;
-  document.getElementById("curso").value = aluno.curso;
-  document.getElementById("notaFinal").value = aluno.notaFinal;
+  document.querySelectorAll(".editar").forEach(btn =>
+    btn.addEventListener("click", (e) => editarAluno(e.target.dataset.i))
+  );
+  document.querySelectorAll(".excluir").forEach(btn =>
+    btn.addEventListener("click", (e) => excluirAluno(e.target.dataset.i))
+  );
+};
+
+const editarAluno = (i) => {
+  const a = alunos[i];
+  document.getElementById("nome").value = a.nome;
+  document.getElementById("idade").value = a.idade;
+  document.getElementById("curso").value = a.curso;
+  document.getElementById("notaFinal").value = a.notaFinal;
   indiceEdicao = i;
-}
+};
 
-function excluirAluno(i) {
+const excluirAluno = (i) => {
   alunos.splice(i, 1);
   atualizarTabela();
-}
+  alert("Aluno excluído!");
+};
